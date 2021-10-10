@@ -254,9 +254,8 @@ else
     quiver3(X_plot(:,1),X_plot(:,2),X_plot(:,3),Y(:,1),Y(:,2),Y(:,3),'color','black');
 end
 
-
-
 % Test dynamics for T time steps
+
 X0 = Xdata(1,:);
 X_s = []; Xvel_s = [];
 for j = 1:size(X0,1)

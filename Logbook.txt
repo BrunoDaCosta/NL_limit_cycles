@@ -1,0 +1,13 @@
+\section*{NOTES and STATE OF MY WORK}
+\subsection{Week1} 
+(Update 28/09/21) \\
+\cite{c1} \cite{c2} read and tested demo.m with multiple examples (for linear limit cycles) and went through the code.
+\subsection{Week2} 
+(Update 03/10/21)\\
+Two articles \cite{c1} \cite{c2} read in more depth. Still have to check closer the nonlinear\_limitcycles.m to understand more precisely how the algorithms are implemented in Matlab. Went through \cite{c5}.
+Note: Monday and Tuesday I'll define the pros and cons of the different method in order to have a clear view on the state-of-the-art of the domain, as we discussed last week (Limitations in order to propose solutions).\\
+
+(Update 05/10/21)\\
+MATLAB file: I went through the code (nonlinear) to understand it and I simulated multiple dataset to see the results, I took out the plot of the "arrows" to see the delta-position as it takes a long time to plot.\\
+As the \cite{c1} report stipulates, some problems are still to be solved. I won't talk about the accuracy of the training trajectories (as it is not really something that can be improved) but still the limit cycles are planar ones which can be improved, as the papers says, by using a nonlinear dimensionality reduction algorithm.\\
+You told me to point out on the difference between the two papers and from what I understand on the comparison between the two is that (I am not sure of what comes next that's why we need to discuss a bit) the main point of using Dynamical System instead of other state-of-the-art methods (proabilistic, constrained-based) is it's high ability for convergence (into a limit-cycle i.e. Poincarré) and resistance to perturbations which is very usefull in robot-human environment. Also the ability, still in the first paper, to modify the parameters (such as $\rho_{0}$) to have a "smooth" switch between rhythmic patterns and a point to point displacement during the process, which is not possible with the Fourier Primitive Method. 
