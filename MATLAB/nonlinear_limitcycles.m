@@ -326,41 +326,57 @@ ylabel('$\xi_2$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 xlabel('$\xi_1$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 hold on;
 % grid on;
-% Test dynamics for T time steps
+
+%% (print speed along linear limit-cycle)
 
 %This sets the point as the first one of data (x1.5)
 X0 = 1.5*Xdata(1,:);
-%This sets the point in x0 (shift from the origin)
-X1=-params.x0;
-%This sets a point at ths opposite side from the limit cycle in comparison
-%to X0
-X2 =-params.x0 + (-params.x0 - 1.5*Xdata(1,:));
 
-listpoints={X0,X1,X2};
-X_s = []; Xvel_s = [];
-nmbpoints=T(1)/6; %don't need to plot a lot since it converges fast to the limit cycle
-for i_list = 1:length(listpoints)
-    colorrgb = 0;
-    for j = 1:size(listpoints{i_list},1)
-        X = listpoints{i_list}(j,:);
-        for i = 1:(nmbpoints) 
-            X_prev = X;
-            %%%%%% FUNCTION TO CALCULATE POLAR/SPHERICAL VELOCITIES: %%%%%%
-            [r,dr] = DSGMM(X,params,rho_GMModel);
-            %[r,dr] = DSPoly(X,params,rho_polyModel);
-            %%%%%% INTEGRATE THE DS TO GET NEXT POLAR/SPHERICAL POSITION: %%%%%%
-            next_r = r + dr*dt;
-            % Get next cartesian position
-            X = (Rrot*(hyper2cart(next_r)./a)')' - x0;
-            X_s = [X_s; X];
-            Xvel_s = [Xvel_s; sph2cartvelocities(r,dr)];
-            if N == 2
-                plot(X(1),X(2),'k.','LineWidth',2,'MarkerSize',10,'Color',[0.0 colorrgb 0.9999-colorrgb]); hold on; grid on;
-            else
-                plot3(X(1),X(2),X(3),'k.'); hold on; grid on;
-            end
-            colorrgb = colorrgb + 1/(nmbpoints+1);
-        end
-    end
+nmbpoints=T(1); %don't need to plot a lot since it converges fast to the limit cycle
+X(1,:) = X0;
+for i = 1:(nmbpoints) 
+    %%%%%% FUNCTION TO CALCULATE POLAR/SPHERICAL VELOCITIES: %%%%%%
+    [r,dr] = DS(X(i,:),params);
+    %%%%%% INTEGRATE THE DS TO GET NEXT POLAR/SPHERICAL POSITION: %%%%%%
+    next_r = r + dr*dt;
+    % Get next cartesian position
+    X(i+1,:) = (Rrot*(hyper2cart(next_r)./a)')' - x0;
+    dX(i) = sqrt((X(i+1,1)-X(i,1))^2+(X(i+1,2)-X(i,2))^2);
 end
+  
+first=50;
+figure;hold on;
+
+n_X=X(first+1:length(X),:);
+n_dX=dX(first:length(dX))';
+scatter3(n_X(:,1),n_X(:,2),n_dX(:,1),[],n_dX(:,1));
+colorbar;
+
+
+%% (print speed along non-linear limit-cycle)
+
+%This sets the point as the first one of data (x1.5)
+X0 = 1.5*Xdata(1,:);
+
+nmbpoints=T(1); %don't need to plot a lot since it converges fast to the limit cycle
+X(1,:) = X0;
+for i = 1:(nmbpoints) 
+    %%%%%% FUNCTION TO CALCULATE POLAR/SPHERICAL VELOCITIES: %%%%%%
+    [r,dr] = DSGMM(X(i,:),params,rho_GMModel);
+    %%%%%% INTEGRATE THE DS TO GET NEXT POLAR/SPHERICAL POSITION: %%%%%%
+    next_r = r + dr*dt;
+    % Get next cartesian position
+    X(i+1,:) = (Rrot*(hyper2cart(next_r)./a)')' - x0;
+    dX(i) = sqrt((X(i+1,1)-X(i,1))^2+(X(i+1,2)-X(i,2))^2);
+end
+  
+first=50;
+figure;hold on;
+title('Line Plot of Sine and Cosine Between -2\pi and 2\pi')
+
+n_X=X(first+1:length(X),:);
+n_dX=dX(first:length(dX))';
+scatter3(n_X(:,1),n_X(:,2),n_dX(:,1),[],n_dX(:,1));
+a = colorbar;
+a.Label.String = 'Velocity [m/s]';
 
