@@ -22,7 +22,7 @@ xlabel('x','Interpreter','latex','FontSize',18,'FontWeight','bold');
 ylabel('y','Interpreter','latex','FontSize',18,'FontWeight','bold');
 zlabel('z','Interpreter','latex','FontSize',18,'FontWeight','bold');
 
-if(true)%plot the 3 combinations of spherical coordinates
+if(false)%plot the 3 combinations of spherical coordinates
     figure;
     plot(TH,R)
     ylabel('$\rho$($\theta$)','Interpreter','latex','FontSize',18,'FontWeight','bold');
@@ -44,6 +44,10 @@ plot3(TH,PHI,R)
 xlabel('$\theta$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 ylabel('$\phi$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 zlabel('$\rho$','Interpreter','latex','FontSize',18,'FontWeight','bold');
+plot3(R,TH,PHI)
+xlabel('$\rho$','Interpreter','latex','FontSize',18,'FontWeight','bold');
+ylabel('$\theta$','Interpreter','latex','FontSize',18,'FontWeight','bold');
+zlabel('$\phi$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 
 
 
