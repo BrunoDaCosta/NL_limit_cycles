@@ -1,6 +1,6 @@
 %% *Demo -- Optimization*
 % This demo shows the steps of the optimization for the project on:
-% 
+%
 % *"Learning dynamical systems with bifurcations"*
 %%
 clear all;
@@ -15,25 +15,25 @@ addpath(genpath('.'));
 load('datatest12.mat', 'traj')
 initial_parameters = [];
 initial_parameters.M = 300;
-initial_parameters.R = 1; 
+initial_parameters.R = 1;
 dirsgn = 1;
 no_gauss = 20;
 % data files in 3D with 'time' as first column
-    % Select the maximum length of the trajectory
-    len = 6000;
-    % Select how many samples to remove at beginning
-    st = 100;
-    rat = ceil(max(len/traj.size, 1));
-    yfar1 = interp(traj.data(st:end-st,1),rat);
-    yfar2 = interp(traj.data(st:end-st,2),rat);
-    tfar1= interp(traj.time(st:end-st,1),rat);
-    if size(yfar1,1) >= len
-        yfar1 = yfar1(1:len,:);
-        yfar2 = yfar2(1:len,:);
-        tfar1 = tfar1(1:len,:);
-    end
-    tfar1 = linspace(tfar1(1),tfar1(end),size(tfar1,1));
-%% 
+% Select the maximum length of the trajectory
+len = 6000;
+% Select how many samples to remove at beginning
+st = 100;
+rat = ceil(max(len/traj.size, 1));
+yfar1 = interp(traj.data(st:end-st,1),rat);
+yfar2 = interp(traj.data(st:end-st,2),rat);
+tfar1= interp(traj.time(st:end-st,1),rat);
+if size(yfar1,1) >= len
+    yfar1 = yfar1(1:len,:);
+    yfar2 = yfar2(1:len,:);
+    tfar1 = tfar1(1:len,:);
+end
+tfar1 = linspace(tfar1(1),tfar1(end),size(tfar1,1));
+%%
 % Now we prepare the data and convert it to spherical coordinates:
 
 
@@ -54,7 +54,7 @@ end
 plotData(Xdata,Xvel,Rdata,Rvel,T,m,'cartp');
 legend('Data trajectory','Location','northeast');
 %% Find $\omega$ limit set
-% Initialize and perform Expectation Maximization on a Gaussian Mixture Model 
+% Initialize and perform Expectation Maximization on a Gaussian Mixture Model
 % with 1 or 2 Gaussians to find the model of the limit set:
 %%
 j=1;
@@ -65,9 +65,9 @@ j=1;
 % Decide if you want to perform dimensionality reduction:
 %%
 % prompt = 'Enter 1 to perform dimensionality reduction and 0 to skip it:\n';
-% dimred = input(prompt); 
+% dimred = input(prompt);
 dimred = 1;
-%% 
+%%
 % If wanted, perform dimensionality reduction (PCA) and plot projected data:
 
 if (j == 2)     % if there are more clusters, choose which one to perform eigenvalue decomposition on
@@ -125,7 +125,7 @@ Xdata = (Rrot \ (Xdata' - Mu(1:N,k)))';
 % Set initial rho0 to variance of Gaussian model
 initial_parameters.rho0 = 3*mean(diag(Sigma(1:N,1:N,1)));
 % Set initial values of other parameters
-initial_parameters.x0 = [0 0]; 
+initial_parameters.x0 = [0 0];
 % initial_parameters.M = 20;
 % Select which parameters to optimize in first objective (M, rho0, (always 0 for R,) a, x0):
 initial_parameters.first = [0 1 0 1 1];
@@ -159,8 +159,8 @@ for cnt=1:size(ZData,1)
     [theta,~]= cart2pol(ZData(cnt,1)*a(1),ZData(cnt,2)*a(2));
     thData(cnt) = theta;
     
-%     alp = (a(2)* abs(ZData(cnt,2))/ rho0) + (a(1)* abs(ZData(cnt,1))/ rho0);
-%     alp = sqrt((a(2)* abs(ZData(cnt,2))/ rho0)^2 + (a(1)* abs(ZData(cnt,1))/ rho0)^2);
+    %     alp = (a(2)* abs(ZData(cnt,2))/ rho0) + (a(1)* abs(ZData(cnt,1))/ rho0);
+    %     alp = sqrt((a(2)* abs(ZData(cnt,2))/ rho0)^2 + (a(1)* abs(ZData(cnt,1))/ rho0)^2);
     r0 = rho0;
     rsData(cnt) = rr(:,1) / r0;
 end
@@ -191,8 +191,8 @@ for iter=1:10
         if (count_bin(jc) < meancount)
             sigma_ = .1*[min(sig_bin(jc,1),.01) 0;0 min(sig_bin(jc,2),.01)];
             newpoints = mvnrnd(mu_bin(jc,:),sigma_*sigma_,meancount - count_bin(jc));
-%             randindex = ceil(length(bin_slice(jc).data)*rand(meancount - count_bin(jc),1) );
-%             newpoints =  bin_slice(jc).data(randindex,:);
+            %             randindex = ceil(length(bin_slice(jc).data)*rand(meancount - count_bin(jc),1) );
+            %             newpoints =  bin_slice(jc).data(randindex,:);
             bin_slice(jc).data = [bin_slice(jc).data;newpoints];
             count_bin(jc) = count_bin(jc) + length(newpoints);
             mu_bin(jc,:) = mean(bin_slice(jc).data);
@@ -233,7 +233,7 @@ hold on;
 fcontour(gmPDF,[-4 4 .3 1.5],'LevelList',.1:.2:1.5,'LineWidth', 2);
 grid on;
 ax = gca;
-ax.FontSize = 14; 
+ax.FontSize = 14;
 ylabel('$\bf{s}(\theta)$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 xlabel('$\theta$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 ylim([.3 1.7]);
@@ -252,11 +252,11 @@ figure; hold on; grid on;
 plot(Xdata(:,1),Xdata(:,2),'r.'); hold on;
 
 % Plot streamlines / arrows to show dynamics
- yl = ylim;
- xl = xlim;
+yl = ylim;
+xl = xlim;
 
- xl = xl ;
- yl = yl ;
+xl = xl ;
+yl = yl ;
 ylim(yl);
 xlim(xl);
 resol = 500;
@@ -269,11 +269,13 @@ X_plot = [Xs(:), Ys(:)];
 %     dr = dirsgn*dr;
 %     Y(i,1:N) = sph2cartvelocities(r,dr);
 % end
-% 
+%
 % streamslice(Xs,Ys,reshape(Y(:,1),resol,resol),...
 % reshape(Y(:,2),resol,resol),'method','cubic');
+
+
 ax = gca;
-ax.FontSize = 14; 
+ax.FontSize = 14;
 ylim(yl);
 xlim(xl);
 ylabel('$\xi_2$','Interpreter','latex','FontSize',18,'FontWeight','bold');
@@ -307,7 +309,7 @@ fig2 = figure;
 plot(Xdata(:,1),Xdata(:,2),'r.'); hold on;
 Ygmm = zeros(size(X_plot));
 
-% for i= 1:size(X_plot,1)  
+% for i= 1:size(X_plot,1)
 %     if(mod(i,1000)==0)
 %         fprintf('in process:% .2f \n',100*i/size(X_plot,1));
 %     end
@@ -317,9 +319,9 @@ Ygmm = zeros(size(X_plot));
 % end
 
 streamslice(Xs,Ys,reshape(Ygmm(:,1),resol,resol),...
-reshape(Ygmm(:,2),resol,resol),'method','cubic');
+    reshape(Ygmm(:,2),resol,resol),'method','cubic');
 ax = gca;
-ax.FontSize = 14; 
+ax.FontSize = 14;
 ylim(yl);
 xlim(xl);
 ylabel('$\xi_2$','Interpreter','latex','FontSize',18,'FontWeight','bold');
@@ -334,7 +336,7 @@ X0 = 1.5*Xdata(1,:);
 
 nmbpoints=T(1); %don't need to plot a lot since it converges fast to the limit cycle
 X(1,:) = X0;
-for i = 1:(nmbpoints) 
+for i = 1:(nmbpoints)
     %%%%%% FUNCTION TO CALCULATE POLAR/SPHERICAL VELOCITIES: %%%%%%
     [r,dr] = DS(X(i,:),params);
     %%%%%% INTEGRATE THE DS TO GET NEXT POLAR/SPHERICAL POSITION: %%%%%%
@@ -343,24 +345,45 @@ for i = 1:(nmbpoints)
     X(i+1,:) = (Rrot*(hyper2cart(next_r)./a)')' - x0;
     dX(i) = sqrt((X(i+1,1)-X(i,1))^2+(X(i+1,2)-X(i,2))^2);
 end
-  
-first=50;
-figure;hold on;
 
+resol = 100;
+[Xs,Ys] = meshgrid(linspace(xl(1),xl(2),resol),linspace(yl(1),yl(2),resol));
+X_plot = [Xs(:), Ys(:)];
+Ygmm = zeros(size(X_plot));
+for i= 1:size(X_plot,1)
+    if(mod(i,1000)==0)
+        fprintf('Linear in process:% .2f \n',100*i/size(X_plot,1));
+    end
+    [r_gmm,dr_gmm] = DS(X_plot(i,:),params);
+    dr_gmm = dirsgn*dr_gmm;
+    Ygmm(i,1:N) = sph2cartvelocities(r_gmm,dr_gmm);
+end
+
+
+first=50;
 n_X=X(first+1:length(X),:);
 n_dX=dX(first:length(dX))';
-scatter3(n_X(:,1),n_X(:,2),n_dX(:,1),[],n_dX(:,1));
-colorbar;
+
+figure;hold on;
+title('Velocity along linear limit cycle')
+scatter3(n_X(:,1),n_X(:,2),n_dX(:),[],n_dX(:))
+cbar = colorbar;
+cbar.Label.String = 'Velocity [m/s]';
+streamslice(Xs,Ys,reshape(Ygmm(:,1),resol,resol),...
+    reshape(Ygmm(:,2),resol,resol),'method','cubic');
 
 
-%% (print speed along non-linear limit-cycle)
+
+
+
+%% (print velocity along non-linear limit-cycle)
 
 %This sets the point as the first one of data (x1.5)
 X0 = 1.5*Xdata(1,:);
 
 nmbpoints=T(1); %don't need to plot a lot since it converges fast to the limit cycle
 X(1,:) = X0;
-for i = 1:(nmbpoints) 
+for i = 1:(nmbpoints)
     %%%%%% FUNCTION TO CALCULATE POLAR/SPHERICAL VELOCITIES: %%%%%%
     [r,dr] = DSGMM(X(i,:),params,rho_GMModel);
     %%%%%% INTEGRATE THE DS TO GET NEXT POLAR/SPHERICAL POSITION: %%%%%%
@@ -369,14 +392,30 @@ for i = 1:(nmbpoints)
     X(i+1,:) = (Rrot*(hyper2cart(next_r)./a)')' - x0;
     dX(i) = sqrt((X(i+1,1)-X(i,1))^2+(X(i+1,2)-X(i,2))^2);
 end
-  
-first=50;
-figure;hold on;
-title('Line Plot of Sine and Cosine Between -2\pi and 2\pi')
 
+resol = 100;
+[Xs,Ys] = meshgrid(linspace(xl(1),xl(2),resol),linspace(yl(1),yl(2),resol));
+X_plot = [Xs(:), Ys(:)];
+Ygmm = zeros(size(X_plot));
+for i= 1:size(X_plot,1)
+    if(mod(i,1000)==0)
+        fprintf('Non-linear in process:% .2f \n',100*i/size(X_plot,1));
+    end
+    [r_gmm,dr_gmm] = DSGMM(X_plot(i,:),params,rho_GMModel);
+    dr_gmm = dirsgn*dr_gmm;
+    Ygmm(i,1:N) = sph2cartvelocities(r_gmm,dr_gmm);
+end
+
+first=50;
 n_X=X(first+1:length(X),:);
 n_dX=dX(first:length(dX))';
+
+figure;hold on;
+title('Velocity along non-linear limit cycle')
 scatter3(n_X(:,1),n_X(:,2),n_dX(:,1),[],n_dX(:,1));
-a = colorbar;
-a.Label.String = 'Velocity [m/s]';
+cbar = colorbar;
+cbar.Label.String = 'Velocity [m/s]';
+streamslice(Xs,Ys,reshape(Ygmm(:,1),resol,resol),...
+    reshape(Ygmm(:,2),resol,resol),'method','cubic');
+
 
