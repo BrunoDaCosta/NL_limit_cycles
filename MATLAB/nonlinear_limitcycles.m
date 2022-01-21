@@ -11,8 +11,8 @@ addpath(genpath('.'));
 %% Load and prepare data
 % You can load data from a .csv file or from a .mat file:
 %%
-
-load('datatest12.mat', 'traj')
+modulo_print=250;
+load('ImpossibleDataset_EightShape2.mat', 'traj')
 initial_parameters = [];
 initial_parameters.M = 300;
 initial_parameters.R = 1;
@@ -242,13 +242,12 @@ xlim([-4. 4]);
 hold off;
 
 %% Plot learned dynamics with original data and new trajectories
-%%
+%% Linear
 % Get unrotated data
 Xdata = Xdata_;
 
 % Plot original data
 figure; hold on; grid on;
-
 plot(Xdata(:,1),Xdata(:,2),'r.'); hold on;
 
 % Plot streamlines / arrows to show dynamics
@@ -287,15 +286,16 @@ X_s = []; Xvel_s = [];
 for j = 1:size(X0,1)
     X = X0(j,:);
     for i = 1:T(1)
+        if(mod(i,modulo_print)==0)
+            fprintf('Linear path in process:% .2f %% \n',100*i/T(1));
+        end
         X_prev = X;
         %%%%%% FUNCTION TO CALCULATE POLAR/SPHERICAL VELOCITIES: %%%%%%
-        [r,dr] = DS(X,params);
+        [r,dr] =  DS(X,params);
         %%%%%% INTEGRATE THE DS TO GET NEXT POLAR/SPHERICAL POSITION: %%%%%%
         next_r = r + dr*dt;
         % Get next cartesian position
         X = (Rrot*(hyper2cart(next_r)./a)')' - x0;
-        X_s = [X_s; X];
-        Xvel_s = [Xvel_s; sph2cartvelocities(r,dr)];
         if N == 2
             plot(X(1),X(2),'k.','LineWidth',2,'MarkerSize',10); hold on; grid on;
         else
@@ -304,19 +304,12 @@ for j = 1:size(X0,1)
     end
 end
 %========================
-% hold on;
-fig2 = figure;
+%% Non-Linear
+figure; hold on; grid on;
 plot(Xdata(:,1),Xdata(:,2),'r.'); hold on;
 Ygmm = zeros(size(X_plot));
 
-% for i= 1:size(X_plot,1)
-%     if(mod(i,1000)==0)
-%         fprintf('in process:% .2f \n',100*i/size(X_plot,1));
-%     end
-%     [r_gmm,dr_gmm] = DSGMM(X_plot(i,:),params,rho_GMModel);
-%     dr_gmm = dirsgn*dr_gmm;
-%     Ygmm(i,1:N) = sph2cartvelocities(r_gmm,dr_gmm);
-% end
+
 
 streamslice(Xs,Ys,reshape(Ygmm(:,1),resol,resol),...
     reshape(Ygmm(:,2),resol,resol),'method','cubic');
@@ -327,7 +320,30 @@ xlim(xl);
 ylabel('$\xi_2$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 xlabel('$\xi_1$','Interpreter','latex','FontSize',18,'FontWeight','bold');
 hold on;
-% grid on;
+
+% Test dynamics for T time steps
+X0 = 1.5*Xdata(1,:);
+X_s = []; Xvel_s = [];
+for j = 1:size(X0,1)
+    X = X0(j,:);
+    for i = 1:T(1)
+        if(mod(i,modulo_print)==0)
+            fprintf('Non-linear path in process:% .2f %% \n',100*i/T(1));
+        end
+        X_prev = X;
+        %%%%%% FUNCTION TO CALCULATE POLAR/SPHERICAL VELOCITIES: %%%%%%
+        [r,dr] = DSGMM(X,params,rho_GMModel);
+        %%%%%% INTEGRATE THE DS TO GET NEXT POLAR/SPHERICAL POSITION: %%%%%%
+        next_r = r + dr*dt;
+        % Get next cartesian position
+        X = (Rrot*(hyper2cart(next_r)./a)')' - x0;
+        if N == 2
+            plot(X(1),X(2),'k.','LineWidth',2,'MarkerSize',10); hold on; grid on;
+        else
+            plot3(X(1),X(2),X(3),'k.'); hold on; grid on;
+        end
+    end
+end
 
 %% (print speed along linear limit-cycle)
 
@@ -351,8 +367,8 @@ resol = 100;
 X_plot = [Xs(:), Ys(:)];
 Ygmm = zeros(size(X_plot));
 for i= 1:size(X_plot,1)
-    if(mod(i,1000)==0)
-        fprintf('Linear in process:% .2f \n',100*i/size(X_plot,1));
+    if(mod(i,modulo_print)==0)
+        fprintf('Linear velocity in process:% .2f %% \n',100*i/size(X_plot,1));
     end
     [r_gmm,dr_gmm] = DS(X_plot(i,:),params);
     dr_gmm = dirsgn*dr_gmm;
@@ -398,8 +414,8 @@ resol = 100;
 X_plot = [Xs(:), Ys(:)];
 Ygmm = zeros(size(X_plot));
 for i= 1:size(X_plot,1)
-    if(mod(i,1000)==0)
-        fprintf('Non-linear in process:% .2f \n',100*i/size(X_plot,1));
+    if(mod(i,modulo_print)==0)
+        fprintf('Non-linear velocity in process:% .2f %% \n',100*i/size(X_plot,1));
     end
     [r_gmm,dr_gmm] = DSGMM(X_plot(i,:),params,rho_GMModel);
     dr_gmm = dirsgn*dr_gmm;

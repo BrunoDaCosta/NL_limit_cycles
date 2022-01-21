@@ -14,7 +14,7 @@ if ~isempty(params)
     rho0 = params.rho0;
     M = params.M;
     R = params.R;
-    a = params.a;
+    a = params.a; 
     x0 = params.x0;
     Rrot = params.Rrot;
     
